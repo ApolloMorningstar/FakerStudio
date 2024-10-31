@@ -3,20 +3,18 @@ import { View, Image, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 
 const TelaInicial = () => {
-  const router = useRouter(); // Initialize the router
+  const router = useRouter(); 
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      // After 5 seconds, navigate to 'Capa'
       router.push('/Capa/Capa');
     }, 2000);
 
-    return () => clearTimeout(timer); // Clear the timer on unmount
+    return () => clearTimeout(timer); 
   }, []);
 
   return (
     <View style={styles.container}>
-      {/* Logo */}
       <Image style={styles.logo} source={require('./pasta_de_imagens/logo.png')} />
     </View>
   );
@@ -27,7 +25,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fddde6', // Background color matching the image theme
+    backgroundColor: '#fddde6', 
   },
   logo: {
     width: 180,

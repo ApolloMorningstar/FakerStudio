@@ -37,7 +37,7 @@ const User = sequelize.define('user', { //criação de tabela
         allowNull: false,
         defaultValue: 'inativo'
     },
-    cpf: {
+    Cpf: {
         type: Sequelize.DataTypes.STRING,
         allowNull: true,
     }

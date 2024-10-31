@@ -9,7 +9,6 @@ const Capa = () => {
       <Image style={styles.logo} source={require('./pasta de imagens/logo.png')} />
       <Text style={styles.title}>SpotFake</Text>
 
-      {/* Quadrado na base com os botões */}
       <View style={styles.buttonWrapper}>
       
       <Link href="Registrar/Registrar" asChild>
