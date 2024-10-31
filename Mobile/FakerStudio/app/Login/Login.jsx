@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { View, Text, TextInput, Pressable, StyleSheet, SafeAreaView, Image, useWindowDimensions, TouchableOpacity } from 'react-native';
 
 const Login = () => {
-    const [email, setEmail] = useState('');
-    const [senha, setSenha] = useState('');
+    const [Email, setEmail] = useState('');
+    const [Senha, setSenha] = useState('');
     const [confirmarSenha, setConfirmarSenha] = useState('');
     const CapaSignUp = require('./pasta_de_imagens/logo.png'); 
     const GoogleLogo = require('./pasta_de_imagens/logo.png'); 
@@ -16,14 +16,18 @@ const Login = () => {
             return;
         }
         try {
-            const resposta = await fetch('http://localhost:8081/autentificacao/Login', {
+            const resposta = await fetch("http://localhost:8000/autentificacao/Login", {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, password: senha })
+                body: JSON.stringify({
+                    Email: Email,
+                    Senha: Senha,
+                })
             });
+
 
             if (resposta.ok) {
                 console.log('Usuário criado com sucesso');

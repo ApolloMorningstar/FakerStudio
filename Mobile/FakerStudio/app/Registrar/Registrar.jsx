@@ -14,14 +14,14 @@ const Registrar = () => {
 
     const { width } = useWindowDimensions();
 
-    const realizarLogin = async () => {
+    const realizarRegistro = async () => {
         if (!Nome || !Sobrenome || !Email || !DataNascimento || !Cpf || !Senha) {
             Alert.alert('Erro', 'Por favor, preencha todos os campos.');
             return;
         }
 
         try {
-            const resposta = await fetch('http://localhost:8081/autenticacao/Registro', {
+            const resposta = await fetch('http://localhost:8000/autentificacao/Registro', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -110,7 +110,7 @@ const Registrar = () => {
                         placeholderTextColor="#333"
                         secureTextEntry
                     />
-                    <Pressable onPress={realizarLogin} style={styles.loginButton}>
+                    <Pressable onPress={realizarRegistro} style={styles.loginButton}>
                         <Text style={styles.loginButtonText}>Registrar</Text>
                     </Pressable>
                     <View style={styles.forgotPasswordContainer}>

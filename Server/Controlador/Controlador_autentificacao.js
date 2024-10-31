@@ -40,7 +40,7 @@ const Login = async (requisicao, resposta) => {
     }
     const token = jsonwebtoken.sign(
         {
-            "Nome_Completo": `${userExiste.nome} ${userExiste.sobrenome}`,
+            "Nome_Completo": `${userExiste.Nome} ${userExiste.Sobrenome}`,
             "Email": userExiste.Email,
             "status": userExiste.status
         },

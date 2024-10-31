@@ -1,13 +1,13 @@
 import  Express  from "express";
 import cors from "cors"
-import {rotas} from './Roteamento/rotas_autenticacao.js'
+import { rotas } from "./Roteamento/Rotas_autentificacao.js";
 
 const app = Express()
 app.use(Express.json())
 app.use(cors())
-// criarTabelas()
+//criarTabelas()
 
-app.use('/autenticacao', rotas)
+app.use('/autentificacao', rotas)
 
 
 app.listen(8000)
