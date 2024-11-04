@@ -1,3 +1,4 @@
+
 import Sequelize from 'sequelize'
 
 const sequelize = new Sequelize(
@@ -35,11 +36,7 @@ const User = sequelize.define('user', { //criação de tabela
     status: {
         type: Sequelize.DataTypes.ENUM('ativo', 'inativo'),
         allowNull: false,
-        defaultValue: 'inativo'
-    },
-    Cpf: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: true,
+        defaultValue: 'inativo',
     }
 })
 

@@ -6,7 +6,6 @@ const Registrar = () => {
     const [Sobrenome, setSobrenome] = useState('');
     const [Email, setEmail] = useState('');
     const [DataNascimento, setDataNascimento] = useState('');
-    const [Cpf, setCpf] = useState('');
     const [Senha, setSenha] = useState('');
 
     const CapaLogin = require('./pasta_de_imagens/logo.png'); 
@@ -15,7 +14,7 @@ const Registrar = () => {
     const { width } = useWindowDimensions();
 
     const realizarRegistro = async () => {
-        if (!Nome || !Sobrenome || !Email || !DataNascimento || !Cpf || !Senha) {
+        if (!Nome || !Sobrenome || !Email || !DataNascimento || !Senha) {
             Alert.alert('Erro', 'Por favor, preencha todos os campos.');
             return;
         }
@@ -27,7 +26,7 @@ const Registrar = () => {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ Nome: Nome, Sobrenome: Sobrenome, Email: Email, DataNascimento: DataNascimento, Cpf: Cpf, password: Senha }) 
+                body: JSON.stringify({ Nome: Nome, Sobrenome: Sobrenome, Email: Email, DataNascimento: DataNascimento, Senha: Senha }) 
             });
 
             if (resposta.ok) {
@@ -36,7 +35,6 @@ const Registrar = () => {
                 setSobrenome('');
                 setEmail('');
                 setDataNascimento('');
-                setCpf('');
                 setSenha('');
             } else {
                 console.log('Ocorreu um erro:', resposta.status);
@@ -93,13 +91,6 @@ const Registrar = () => {
                         onChangeText={handleDateChange} 
                         value={DataNascimento}
                         placeholder="Data de Nascimento (DD/MM/AAAA)"
-                        placeholderTextColor="#333"
-                    />
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={setCpf}
-                        value={Cpf}
-                        placeholder="CPF"
                         placeholderTextColor="#333"
                     />
                     <TextInput

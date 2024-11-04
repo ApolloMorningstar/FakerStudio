@@ -1,4 +1,4 @@
-import { User } from "./db.js";
+import { User } from "../db.js";
 import  bcryptjs from "bcryptjs";
 import jsonwebtoken from "jsonwebtoken";
 
@@ -49,10 +49,10 @@ const Login = async (requisicao, resposta) => {
     )
 
 
-    res.send({
-        msg: "ok usuario logado",
+    resposta.status(200).json({
+        message: "Usuário logado com sucesso",
         tokenJWT: token
-    })
+    });    
 }
 
 export { Registro, Login }
