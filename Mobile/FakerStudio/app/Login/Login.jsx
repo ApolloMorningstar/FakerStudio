@@ -4,21 +4,19 @@ import { View, Text, TextInput, Pressable, StyleSheet, SafeAreaView, Image, useW
 const Login = () => {
     const [Email, setEmail] = useState('');
     const [Senha, setSenha] = useState('');
-    const [mensagemErro, setMensagemErro] = useState(''); // Adiciona um estado para mensagens de erro
+    const [mensagemErro, setMensagemErro] = useState(''); 
     const CapaSignUp = require('./pasta_de_imagens/logo.png'); 
     const GoogleLogo = require('./pasta_de_imagens/logo.png'); 
 
     const { width } = useWindowDimensions();
 
     const LogarUsuario = async () => {
-        // Verifica se os campos de email e senha estão preenchidos
         if (!Email || !Senha) {
             setMensagemErro('Preencha todos os campos.');
             return;
         }
 
         try {
-            // Faz a requisição para o backend
             const resposta = await fetch("http://localhost:8000/autentificacao/Login", {
                 method: 'POST',
                 headers: {
@@ -31,20 +29,18 @@ const Login = () => {
                 })
             });
 
-            // Transforma a resposta em JSON
             const dados = await resposta.json();
 
-            // Verifica se a resposta foi bem-sucedida
             if (resposta.ok) {
-                console.log(dados.message); // Exibe a mensagem de sucesso
-                setEmail('');  // Limpa o campo de email
-                setSenha('');  // Limpa o campo de senha
-                setMensagemErro(''); // Limpa a mensagem de erro
+                console.log(dados.message); 
+                setEmail('');  
+                setSenha(''); 
+                setMensagemErro(''); 
             } else {
-                setMensagemErro(dados.message || 'Erro ao tentar logar.'); // Exibe mensagem de erro
+                setMensagemErro(dados.message || 'Erro ao tentar logar.'); 
             }
         } catch (error) {
-            setMensagemErro('Erro na solicitação: ' + error.message); // Exibe erros de requisição
+            setMensagemErro('Erro na solicitação: ' + error.message); 
         }
     };
 
@@ -56,13 +52,11 @@ const Login = () => {
             <View style={styles.formContainer}>
                 <Text style={styles.title}>Login</Text>
 
-                {/* Botão de login com Google */}
                 <TouchableOpacity style={styles.googleButton}>
                     <Image source={GoogleLogo} style={styles.googleLogo} />
                     <Text style={styles.googleButtonText}>Faça Login com o Google</Text>
                 </TouchableOpacity>
 
-                {/* Campo de input para o email */}
                 <TextInput
                     style={styles.input}
                     onChangeText={setEmail}
@@ -72,7 +66,6 @@ const Login = () => {
                     keyboardType="email-address"
                 />
 
-                {/* Campo de input para a senha */}
                 <TextInput
                     style={styles.input}
                     onChangeText={setSenha}
@@ -82,15 +75,12 @@ const Login = () => {
                     secureTextEntry
                 />
 
-                {/* Exibe mensagem de erro, se houver */}
                 {mensagemErro ? <Text style={styles.errorMessage}>{mensagemErro}</Text> : null}
 
-                {/* Botão de login */}
                 <Pressable onPress={LogarUsuario} style={styles.registerButton}>
                     <Text style={styles.registerButtonText}>Entrar</Text>
                 </Pressable>
 
-                {/* Texto no rodapé */}
                 <Text style={styles.footerText}>
                     Ao continuar, você concorda com nossos Termos de Serviço. Leia nossa política de privacidade.
                 </Text>
@@ -99,7 +89,6 @@ const Login = () => {
     );
 };
 
-// Estilos do componente
 const styles = StyleSheet.create({
     container: {
         flex: 1,
