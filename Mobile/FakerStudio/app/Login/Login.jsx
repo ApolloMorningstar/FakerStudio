@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Pressable, StyleSheet, SafeAreaView, Image, useWindowDimensions, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 
 const Login = () => {
     const [Email, setEmail] = useState('');
@@ -9,6 +10,7 @@ const Login = () => {
     const GoogleLogo = require('./pasta_de_imagens/logo.png'); 
 
     const { width } = useWindowDimensions();
+    const router = useRouter();
 
     const LogarUsuario = async () => {
         if (!Email || !Senha) {
@@ -36,6 +38,7 @@ const Login = () => {
                 setEmail('');  
                 setSenha(''); 
                 setMensagemErro(''); 
+                router.push("Perfil/Perfil"); 
             } else {
                 setMensagemErro(dados.message || 'Erro ao tentar logar.'); 
             }

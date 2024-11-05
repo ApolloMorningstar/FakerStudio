@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { ScrollView, View, Text, TextInput, Pressable, StyleSheet, SafeAreaView, Image, useWindowDimensions, TouchableOpacity, Alert } from 'react-native';
+import { Link } from 'expo-router';
 
 const Registrar = () => {
     const [Nome, setNome] = useState('');
@@ -101,9 +102,11 @@ const Registrar = () => {
                         placeholderTextColor="#333"
                         secureTextEntry
                     />
+                <Link href="Perfil/Perfil" asChild>
                     <Pressable onPress={realizarRegistro} style={styles.loginButton}>
                         <Text style={styles.loginButtonText}>Registrar</Text>
                     </Pressable>
+                    </Link>
                     <View style={styles.forgotPasswordContainer}>
                         <TouchableOpacity onPress={() => console.log('Redirecionar para recuperação de senha')}>
                             <Text style={styles.forgotPasswordText}>Esqueci minha senha</Text>
