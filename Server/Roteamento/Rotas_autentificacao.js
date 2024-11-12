@@ -7,5 +7,6 @@ const rotas = express.Router()
 rotas.post('/Registro', Registro)
 rotas.post('/Login', Login)
 rotas.get('/Perfil', Perfil);
+rotas.get('/SalvarCloud', SalvarCloud);
 
 export {rotas}

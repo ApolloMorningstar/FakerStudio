@@ -188,7 +188,7 @@ import { useState, useEffect } from 'react';
 import { View, TextInput, Button, Text, Image, StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker'; 
 
-export default function Perfil() {
+export default function Perfil3() {
   const [titulo, setTitulo] = useState('');
   const [data, setData] = useState('');
   const [cidade, setCidade] = useState('');
@@ -200,17 +200,17 @@ export default function Perfil() {
     buscarMemorias();
   }, []);
 
-  const buscarMemorias = async () => { // Buscar todas as memórias salvas
+  const buscarMemorias = async () => { 
     const resultadoMemorias = await AsyncStorage.getItem('@memorias');
     if (resultadoMemorias) {
       setAppMemoria(JSON.parse(resultadoMemorias));
     }
   };
 
-  const salvarMemoria = async () => { // Salvar nova memória
-    if (titulo && data && cidade && descricao && imagemUri) { // Verificar se todos os campos estão preenchidos
+  const salvarMemoria = async () => { 
+    if (titulo && data && cidade && descricao && imagemUri) { 
       const novaMemoria = { titulo, data, cidade, descricao, imagemUri };
-      const novasMemorias = [...appMemoria, novaMemoria]; // Adicionando a nova memória na lista
+      const novasMemorias = [...appMemoria, novaMemoria]; 
 
       await AsyncStorage.setItem('@memorias', JSON.stringify(novasMemorias));
       setAppMemoria(novasMemorias);
@@ -220,17 +220,16 @@ export default function Perfil() {
     }
   };
  
-//admito que precisei de uma ajudinha nessa parte
-  const selecionarImagem = async () => {     // Abre a biblioteca de imagens do dispositivo
+  const selecionarImagem = async () => {    
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images, // Filtra para mostrar apenas imagens
-      allowsEditing: true, // Permite que o usuário edite a imagem escolhida
-      quality: 1, // Define a qualidade máxima da imagem selecionada
+      mediaTypes: ImagePicker.MediaTypeOptions.Images, 
+      allowsEditing: true, 
+      quality: 1, 
     });
 
     if (!result.canceled) {
-      setImagemUri(result.assets[0].uri); // Acessar o URI da imagem selecionada corretamente
+      setImagemUri(result.assets[0].uri); 
     }
   };
 
@@ -255,7 +254,7 @@ export default function Perfil() {
       {appMemoria.length > 0 ? (
         appMemoria.map((memoria, index) => (
           <View key={index} style={styles.memoriaCard}>
-            {memoria.imagemUri ? ( // Verificar se imagemUri não está vazio antes de renderizar
+            {memoria.imagemUri ? ( 
               <Image source={{ uri: memoria.imagemUri }} style={styles.imagem} />
             ) : null}
             <Text style={styles.titulo}>{memoria.titulo}</Text>
