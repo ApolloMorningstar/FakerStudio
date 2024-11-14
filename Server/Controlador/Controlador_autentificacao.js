@@ -2,7 +2,7 @@ import { User } from "../db.js";
 import bcryptjs from "bcryptjs";
 import jsonwebtoken from "jsonwebtoken";
 
-const Perfil = async (requisicao, resposta) => {
+const ChangePerfil = async (requisicao, resposta) => {
     const token = requisicao.headers.authorization?.split(" ")[1];
     if (!token) {
         return resposta.status(401).json({ message: 'Token não fornecido' });
@@ -15,10 +15,21 @@ const Perfil = async (requisicao, resposta) => {
             return resposta.status(404).json({ message: 'Usuário não encontrado' });
         }
 
+        const { Nome, Sobrenome, Email, Senha, DataNascimento, imagemUri } = requisicao.body;
+        await user.update({
+            Nome,
+            Sobrenome,
+            Email,
+            Senha,
+            DataNascimento,
+            imagemUri 
+        });
+
         resposta.status(200).json({
             Nome_Completo: `${user.Nome} ${user.Sobrenome}`,
             Email: user.Email,
-            status: user.status
+            status: user.status,
+            imagemUri: user.imagemUri 
         });
     } catch (error) {
         return resposta.status(401).json({ message: 'Token inválido ou expirado' });
@@ -64,16 +75,17 @@ const Login = async (requisicao, resposta) => {
             "status": userExiste.status
         },
         'chavecriptografiajwt',
-        { expiresIn: '5m' } // Expira em 5 minutos
+        { expiresIn: '5m' } 
     );
 
     return resposta.status(200).json({
         message: "Usuário logado com sucesso",
-        tokenJWT: token
+        tokenJWT: token,
+        id: userExiste.id
     });
 };
 
-export { Registro, Login, Perfil };
+export { Registro, Login, ChangePerfil };
 
 
 

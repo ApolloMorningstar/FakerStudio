@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ScrollView, View, Text, TextInput, Pressable, StyleSheet, SafeAreaView, Image, TouchableOpacity, Alert, Button } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
@@ -9,28 +10,39 @@ const Perfil = () => {
     const [DataNascimento, setDataNascimento] = useState('');
     const [Senha, setSenha] = useState('');
     const [imagemUri, setImagemUri] = useState('');
-
     const CapaLogin = require('./pasta_de_imagens/logo.png'); 
     const GoogleLogo = require('./pasta_de_imagens/logo.png'); 
+    const IconPerfil = require('./pasta_de_imagens/iconPerfil.png')
 
-    const token = "seu_token_aqui"; 
+
+
 
     useEffect(() => {
         const fetchPerfil = async () => {
             try {
-                const response = await fetch('http://localhost:3000/perfil', {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
+                const token = await AsyncStorage.getItem('tokenJWT');
+                const userId = await AsyncStorage.getItem('id');
+
+                if (userId && token) {
+                    const response = await fetch(`http://localhost:8000/usuarios/${userId}`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    
+                    const data = await response.json();
+                    console.log(data)
+                    if (response.ok) {
+                        setNome(data.Nome); 
+                        setSobrenome(data.Sobrenome); 
+                        setEmail(data.Email);
+                        setDataNascimento(data.DataNascimento);
+                        setSenha(data.Senha);
+                        // setImagemUri(data.imagemUri || '');
+                    } else {
+                        Alert.alert('Erro', 'Falha ao carregar os dados do perfil');
                     }
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    setNome(data.Nome_Completo.split(' ')[0]); 
-                    setSobrenome(data.Nome_Completo.split(' ')[1]);
-                    setEmail(data.Email);
-                } else {
-                    Alert.alert('Erro', 'Falha ao carregar os dados do perfil');
                 }
             } catch (error) {
                 console.error(error);
@@ -39,76 +51,26 @@ const Perfil = () => {
         fetchPerfil();
     }, []);
 
-    
-    const handleSendImage = async () => {
-        if (!imagemUri) {
-            Alert.alert("Erro", "Nenhuma imagem foi selecionada");
-            return;
-        }
-    
-        let formData = new FormData();
-        formData.append('file', {
-            uri: imagemUri,
-            name: 'profile_image.jpg',
-            type: 'image/jpeg'
-        });
-        formData.append('upload_preset', 'ml_default');
-        formData.append('name', 'teste');
-    
-        try {
-            const response = await fetch('https://api.cloudinary.com/v1_1/dgzxx5pbz/upload', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'multipart/form-data'
-                },
-            });
-    
-            const result = await response.json();
-            if (response.ok) {
-                setImagemUri(result.secure_url); 
-                saveNewImageURLonBackend(result.secure_url); 
-            } else {
-                Alert.alert('Erro no upload', 'O upload da imagem falhou');
-            }
-        } catch (error) {
-            console.error('Erro:', error);
-        }
-    };
-    
-
-
     const handleDateChange = (text) => {
         const maskedText = text
             .replace(/\D/g, '') 
             .replace(/(\d{2})(\d)/, '$1/$2') 
             .replace(/(\d{2})\/(\d{2})(\d)/, '$1/$2/$3');
-        setDataNascimento(maskedText);
     };
 
-    const pickImage = async () => {
-        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (permissionResult.granted === false) {
-            Alert.alert("Permissão necessária", "Você precisa permitir o acesso à galeria para editar a foto de perfil.");
-            return;
-        }
-
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [1, 1],
-            quality: 1,
+    const selecionarImagem = async () => {    
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images, 
+            allowsEditing: true, 
+            quality: 1, 
         });
-
+    
         if (!result.canceled) {
-            setImagemUri(result.uri);
+            setImagemUri(result.assets[0].uri); 
         }
     };
+    
 
-    const Salvar_edicao_deInformacao = () => {
-        Alert.alert('Informações Salvas', `Nome: ${Nome}\nSobrenome: ${Sobrenome}\nEmail: ${Email}\nData de Nascimento: ${DataNascimento}\nSenha: ${Senha}`);
-    };
 
     return (
         <SafeAreaView style={styles.container}>
@@ -118,23 +80,24 @@ const Perfil = () => {
                 </View>
 
                 <View style={styles.formContainer}>
-                    <View style={styles.profileImageContainer}>
+                    <TouchableOpacity onPress={selecionarImagem} style={styles.profileImageContainer}>
                         {imagemUri ? (
                             <Image source={{ uri: imagemUri }} style={styles.profileImage} />
                         ) : (
-                            <Text style={styles.profileImagePlaceholder}>Selecionar Imagem</Text>
+                            <Image source={IconPerfil} style={styles.profileImagePlaceholder} />
                         )}
-                    </View>
+                    </TouchableOpacity>
 
-                    <Button title="Selecionar Imagem" onPress={pickImage} />
+
+                    {imagemUri ? <Image source={{ uri: imagemUri }} style={styles.previewImagem} /> : null}
 
                     <Text style={styles.title}>Perfil</Text>
-
+                    
                     <TouchableOpacity style={styles.googleButton}>
                         <Image source={GoogleLogo} style={styles.googleLogo} />
                         <Text style={styles.googleButtonText}>Logado com o Google</Text>
                     </TouchableOpacity>
-                    
+
                     <TextInput
                         style={styles.input}
                         onChangeText={setNome}
@@ -172,9 +135,9 @@ const Perfil = () => {
                         placeholderTextColor="#333"
                         secureTextEntry
                     />
-                    <Pressable onPress={Salvar_edicao_deInformacao} style={styles.loginButton}>
+                    {/* <Pressable onPress={Salvar_edicao_deInformacao} style={styles.loginButton}>
                         <Text style={styles.loginButtonText}>Salvar</Text>
-                    </Pressable>
+                    </Pressable> */}
                 </View>
             </ScrollView>
         </SafeAreaView>
@@ -229,9 +192,11 @@ const styles = StyleSheet.create({
         height: '100%',
         resizeMode: 'cover',
     },
-    profileImagePlaceholder: {
-        color: '#666',
-    },
+        profileImagePlaceholder: {
+            width: '100%',
+            height: '100%',
+            resizeMode: 'cover', 
+        },
     googleButton: {
         flexDirection: 'row',
         alignItems: 'center',

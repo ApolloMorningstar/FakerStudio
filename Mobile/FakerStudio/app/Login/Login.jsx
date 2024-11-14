@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Pressable, StyleSheet, SafeAreaView, Image, useWindowDimensions, TouchableOpacity } from 'react-native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from 'expo-router';
 
 const Login = () => {
     const [Email, setEmail] = useState('');
     const [Senha, setSenha] = useState('');
+    const [userId, setUserId] = useState();
+    const [token, setToken] = useState();
     const [mensagemErro, setMensagemErro] = useState(''); 
     const CapaSignUp = require('./pasta_de_imagens/logo.png'); 
     const GoogleLogo = require('./pasta_de_imagens/logo.png'); 
@@ -32,13 +35,20 @@ const Login = () => {
             });
 
             const dados = await resposta.json();
+            console.log(dados)
+            const tokenJWT = JSON.stringify(dados.tokenJWT)
+            const id = JSON.stringify(dados.id)
+
+            await AsyncStorage.setItem('tokenJWT', tokenJWT)
+            await AsyncStorage.setItem('id', id)
 
             if (resposta.ok) {
                 console.log(dados.message); 
                 setEmail('');  
                 setSenha(''); 
                 setMensagemErro(''); 
-                router.push("Perfil/Perfil"); 
+                router.push("Perfil"); 
+
             } else {
                 setMensagemErro(dados.message || 'Erro ao tentar logar.'); 
             }
