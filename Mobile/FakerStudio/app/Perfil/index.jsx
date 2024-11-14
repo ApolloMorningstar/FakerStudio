@@ -14,6 +14,29 @@ const Perfil = () => {
     const GoogleLogo = require('./pasta_de_imagens/logo.png'); 
     const IconPerfil = require('./pasta_de_imagens/iconPerfil.png')
 
+    // const handleSaveChanges = async () => {
+    //     try {
+    //         const token = await AsyncStorage.getItem('tokenJWT');
+    //         const response = await fetch('http://localhost:8000//editarPerfil', {
+    //             method: 'PUT',
+    //             headers: {
+    //                 'Authorization': `Bearer ${token}`,
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify({ Nome, Sobrenome, Email, Senha }),
+    //         });
+
+    //         if (response.ok) {
+    //             Alert.alert('Sucesso', 'Perfil atualizado com sucesso!');
+    //         } else {
+    //             Alert.alert('Erro', 'Falha ao atualizar o perfil.');
+    //         }
+    //     } catch (error) {
+    //         console.error(error);
+    //         Alert.alert('Erro', 'Ocorreu um erro ao atualizar o perfil.');
+    //     }
+    // };    
+
 
 
 
@@ -67,6 +90,41 @@ const Perfil = () => {
     
         if (!result.canceled) {
             setImagemUri(result.assets[0].uri); 
+        }
+    };
+
+
+    const Salvar_edicao_deInformacao = async () => {
+        try {
+            const token = await AsyncStorage.getItem('tokenJWT');
+            if (!token) {
+                Alert.alert('Erro', 'Token não encontrado.');
+                return;
+            }    
+            const dadosAtualizados = {
+                Nome,
+                Sobrenome,
+                Email,
+                Senha,
+                DataNascimento,
+                imagemUri
+            };    
+            const response = await fetch('http://localhost:8000/autentificacao/ChangePerfil', {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(dadosAtualizados), 
+            });    
+            if (response.ok) {
+                Alert.alert('Sucesso', 'Perfil atualizado com sucesso!');
+            } else {
+                Alert.alert('Erro', 'Falha ao atualizar o perfil.');
+            }
+        } catch (error) {
+            console.error(error);
+            Alert.alert('Erro', 'Ocorreu um erro ao atualizar o perfil.');
         }
     };
     
@@ -135,9 +193,9 @@ const Perfil = () => {
                         placeholderTextColor="#333"
                         secureTextEntry
                     />
-                    {/* <Pressable onPress={Salvar_edicao_deInformacao} style={styles.loginButton}>
+                    <Pressable onPress={Salvar_edicao_deInformacao} style={styles.loginButton}>
                         <Text style={styles.loginButtonText}>Salvar</Text>
-                    </Pressable> */}
+                    </Pressable>
                 </View>
             </ScrollView>
         </SafeAreaView>

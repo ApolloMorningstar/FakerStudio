@@ -6,8 +6,6 @@ import { useRouter } from 'expo-router';
 const Login = () => {
     const [Email, setEmail] = useState('');
     const [Senha, setSenha] = useState('');
-    const [userId, setUserId] = useState();
-    const [token, setToken] = useState();
     const [mensagemErro, setMensagemErro] = useState(''); 
     const CapaSignUp = require('./pasta_de_imagens/logo.png'); 
     const GoogleLogo = require('./pasta_de_imagens/logo.png'); 
