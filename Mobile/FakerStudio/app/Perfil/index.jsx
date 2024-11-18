@@ -97,10 +97,18 @@ const Perfil = () => {
     const Salvar_edicao_deInformacao = async () => {
         try {
             const token = await AsyncStorage.getItem('tokenJWT');
+            const userId = await AsyncStorage.getItem('id');
+            
             if (!token) {
                 Alert.alert('Erro', 'Token não encontrado.');
                 return;
-            }    
+            }
+    
+            if (!userId) {
+                Alert.alert('Erro', 'ID do usuário não encontrado.');
+                return;
+            }
+    
             const dadosAtualizados = {
                 Nome,
                 Sobrenome,
@@ -108,25 +116,30 @@ const Perfil = () => {
                 Senha,
                 DataNascimento,
                 imagemUri
-            };    
-            const response = await fetch('http://localhost:8000/autentificacao/ChangePerfil', {
+            };
+    
+            const response = await fetch(`http://localhost:8000/autentificacao/ChangePerfil`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(dadosAtualizados), 
-            });    
+                body: JSON.stringify(dadosAtualizados),
+            });
+    
             if (response.ok) {
                 Alert.alert('Sucesso', 'Perfil atualizado com sucesso!');
             } else {
-                Alert.alert('Erro', 'Falha ao atualizar o perfil.');
+                const errorData = await response.json();
+                const errorMessage = errorData.message || 'Falha ao atualizar o perfil.';
+                Alert.alert('Erro', errorMessage);
             }
         } catch (error) {
             console.error(error);
             Alert.alert('Erro', 'Ocorreu um erro ao atualizar o perfil.');
         }
     };
+    
     
 
 

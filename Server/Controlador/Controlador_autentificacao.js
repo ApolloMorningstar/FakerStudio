@@ -143,7 +143,6 @@ const ChangePerfil = async (requisicao, resposta) => {
         }
     }
 };
-//Professor os vários console.log e codigo de erro é só pq tava vendo aonde que tava dando o problema que ainda não consegui resolver
 
 
 const Registro = async (requisicao, resposta) => {
@@ -185,7 +184,7 @@ const Login = async (requisicao, resposta) => {
             "status": userExiste.status
         },
         'chavecriptografiajwt',
-        { expiresIn: '5m' } 
+        {expiresIn: 1000*60*5}
     );
 
     return resposta.status(200).json({
