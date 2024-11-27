@@ -86,7 +86,7 @@ const User = sequelize.define('user', { //criação de tabela
             allowNull: false,
         },
         duracao: {
-            type: Sequelize.DataTypes.INTEGER,  // Duração em segundos
+            type: Sequelize.DataTypes.INTEGER,  
             allowNull: false,
         },
         fileUrl: {
