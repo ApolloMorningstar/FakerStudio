@@ -5,8 +5,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 const HomeScreen = () => {
   const [albums, setAlbums] = useState([]);
   const [artists, setArtists] = useState([]);
+  const [songs, setSongs] = useState([]); 
 
   useEffect(() => {
+    // Função para buscar álbuns
     const fetchAlbums = async () => {
       try {
         const response = await fetch('http://localhost:8000/albuns');
@@ -17,6 +19,7 @@ const HomeScreen = () => {
       }
     };
 
+    // Função para buscar artistas
     const fetchArtists = async () => {
       try {
         const response = await fetch('http://localhost:8000/artista');
@@ -27,8 +30,21 @@ const HomeScreen = () => {
       }
     };
 
+    // Função para buscar músicas
+    const fetchSongs = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/musicas');
+        const data = await response.json();
+        setSongs(data);
+      } catch (error) {
+        console.error('Erro ao buscar músicas:', error);
+      }
+    };
+
+    // Chama as funções para buscar os dados quando a tela for carregada
     fetchAlbums();
     fetchArtists();
+    fetchSongs(); 
   }, []);
 
   const renderAlbumItem = ({ item }) => (
@@ -48,6 +64,15 @@ const HomeScreen = () => {
       <Text style={styles.artistName}>{item.nome}</Text>
     </View>
   );
+
+  const renderSongItem = ({ item }) => (
+    <View style={styles.songContainer}>
+      <TouchableOpacity style={styles.songButton}>
+        <Text style={styles.songTitle}>{item.titulo}</Text>
+        <Text style={styles.songDuration}>{item.duracao}</Text>
+      </TouchableOpacity>
+    </View>
+  );  
 
   return (
     <LinearGradient colors={['#E0E0E0', '#B0B0B0']} style={styles.container}>
@@ -75,6 +100,18 @@ const HomeScreen = () => {
           keyExtractor={(item) => item.id.toString()}
           horizontal
           showsHorizontalScrollIndicator={false}
+        />
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Músicas</Text>
+        <FlatList
+          data={songs}
+          renderItem={renderSongItem}
+          keyExtractor={(item) => item.id.toString()}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          ListEmptyComponent={<Text style={styles.emptyText}>Nenhuma música disponível</Text>}
         />
       </View>
     </LinearGradient>
@@ -111,7 +148,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     marginBottom: 10,
     color: '#333',
-    textAlign: 'center', // Centraliza o título da seção
+    textAlign: 'center', 
   },
   albumContainer: {
     marginRight: 15,
@@ -126,7 +163,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 6,
-    alignItems: 'center', // Garante que o conteúdo da célula fique centralizado
+    alignItems: 'center', 
   },
   albumImage: {
     width: 130,
@@ -138,7 +175,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: 14,
     color: '#555',
-    width: 130, // Evita que o título ultrapasse o limite da imagem
+    width: 130, 
     overflow: 'hidden',
     textOverflow: 'ellipsis',
   },
@@ -155,7 +192,7 @@ const styles = StyleSheet.create({
   artistImage: {
     width: 90,
     height: 90,
-    borderRadius: 45, // Faz o círculo perfeito
+    borderRadius: 45, 
   },
   artistName: {
     textAlign: 'center',
@@ -163,9 +200,44 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
     color: '#555',
-    width: 90, // Impede o nome de ultrapassar a imagem
+    width: 90, 
     overflow: 'hidden',
     textOverflow: 'ellipsis',
+  },
+  songContainer: {
+    marginRight: 15,
+    alignItems: 'center',
+  },
+  songButton: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    padding: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+  },
+  songTitle: {
+    fontSize: 14,
+    color: '#555',
+    textAlign: 'center',
+    width: 130,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
+  songDuration: {
+    fontSize: 12,
+    color: '#777',
+    textAlign: 'center',
+    marginTop: 5,
+  },
+  emptyText: {
+    fontSize: 14,
+    color: '#999',
+    textAlign: 'center',
+    marginTop: 10,
   },
 });
 
