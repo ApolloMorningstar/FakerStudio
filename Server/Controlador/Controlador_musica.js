@@ -73,14 +73,16 @@ const pegarMusicasPeloArtista = async (req, res) => {
 };
 
 const criarMusica = async (req, res) => {
-  const { titulo, duracao, fileUrl, albumId, artistaId } = req.body;
+  console.log(req.body);
+  const { titulo, duracao, fileUrl, albumId, artistaId, coverImageUrl } = req.body;
   try {
     const novaMusica = await Musica.create({
       titulo,
       duracao,
       fileUrl,
       albumId,
-      artistaId
+      artistaId,
+      coverImageUrl
     });
     return res.status(201).json(novaMusica);
   } catch (error) {

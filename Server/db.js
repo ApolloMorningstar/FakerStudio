@@ -81,6 +81,10 @@ const User = sequelize.define('user', { //criação de tabela
     });
 
     const Musica = sequelize.define('Musica', {
+        coverImageUrl: {
+            type: Sequelize.DataTypes.STRING,
+            allowNull: true,
+        },
         titulo: {
             type: Sequelize.DataTypes.STRING,
             allowNull: false,
@@ -94,15 +98,17 @@ const User = sequelize.define('user', { //criação de tabela
             allowNull: false,
         },
     });
-
     Musica.belongsTo(Album, {
         foreignKey: 'albumId',
         onDelete: 'CASCADE',
+        as: 'Album'
     });
     Musica.belongsTo(Artista, {
         foreignKey: 'artistaId',
         onDelete: 'CASCADE',
+        as: 'Artista'
     });
+      
     Album.hasMany(Musica, {
         foreignKey: 'albumId',
         as: 'Musicas'
@@ -115,7 +121,7 @@ const User = sequelize.define('user', { //criação de tabela
             .catch((err) => {
                 console.log(err)
             })
-        sequelize.sync({ alter: true }).then(() => {
+        sequelize.sync({ force: true }).then(() => {
             console.log('tabela criada')
         })
     }
