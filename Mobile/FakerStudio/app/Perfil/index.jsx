@@ -4,41 +4,15 @@ import { ScrollView, View, Text, TextInput, Pressable, StyleSheet, SafeAreaView,
 import * as ImagePicker from 'expo-image-picker';
 
 const Perfil = () => {
-    const [Nome, setNome] = useState('');
-    const [Sobrenome, setSobrenome] = useState('');
-    const [Email, setEmail] = useState('');
-    const [DataNascimento, setDataNascimento] = useState('');
-    const [Senha, setSenha] = useState('');
+    const [nome, setNome] = useState('');
+    const [sobrenome, setSobrenome] = useState('');
+    const [email, setEmail] = useState('');
+    const [dataNascimento, setDataNascimento] = useState('');
+    const [senha, setSenha] = useState('');
     const [imagemUri, setImagemUri] = useState('');
-    const CapaLogin = require('./pasta_de_imagens/logo.png'); 
-    const GoogleLogo = require('./pasta_de_imagens/logo.png'); 
-    const IconPerfil = require('./pasta_de_imagens/iconPerfil.png')
-
-    // const handleSaveChanges = async () => {
-    //     try {
-    //         const token = await AsyncStorage.getItem('tokenJWT');
-    //         const response = await fetch('http://localhost:8000//editarPerfil', {
-    //             method: 'PUT',
-    //             headers: {
-    //                 'Authorization': `Bearer ${token}`,
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             body: JSON.stringify({ Nome, Sobrenome, Email, Senha }),
-    //         });
-
-    //         if (response.ok) {
-    //             Alert.alert('Sucesso', 'Perfil atualizado com sucesso!');
-    //         } else {
-    //             Alert.alert('Erro', 'Falha ao atualizar o perfil.');
-    //         }
-    //     } catch (error) {
-    //         console.error(error);
-    //         Alert.alert('Erro', 'Ocorreu um erro ao atualizar o perfil.');
-    //     }
-    // };    
-
-
-
+    const capaLogin = require('./pasta_de_imagens/logo.png'); 
+    const logoGoogle = require('./pasta_de_imagens/logo.png'); 
+    const iconePerfil = require('./pasta_de_imagens/iconPerfil.png');
 
     useEffect(() => {
         const fetchPerfil = async () => {
@@ -55,14 +29,12 @@ const Perfil = () => {
                     });
                     
                     const data = await response.json();
-                    console.log(data)
                     if (response.ok) {
                         setNome(data.Nome); 
                         setSobrenome(data.Sobrenome); 
                         setEmail(data.Email);
                         setDataNascimento(data.DataNascimento);
                         setSenha(data.Senha);
-                        // setImagemUri(data.imagemUri || '');
                     } else {
                         Alert.alert('Erro', 'Falha ao carregar os dados do perfil');
                     }
@@ -79,6 +51,7 @@ const Perfil = () => {
             .replace(/\D/g, '') 
             .replace(/(\d{2})(\d)/, '$1/$2') 
             .replace(/(\d{2})\/(\d{2})(\d)/, '$1/$2/$3');
+        setDataNascimento(maskedText); 
     };
 
     const selecionarImagem = async () => {    
@@ -93,8 +66,7 @@ const Perfil = () => {
         }
     };
 
-
-    const Salvar_edicao_deInformacao = async () => {
+    const salvarEdicaoDeInformacao = async () => {
         try {
             const token = await AsyncStorage.getItem('tokenJWT');
             const userId = await AsyncStorage.getItem('id');
@@ -110,11 +82,11 @@ const Perfil = () => {
             }
     
             const dadosAtualizados = {
-                Nome,
-                Sobrenome,
-                Email,
-                Senha,
-                DataNascimento,
+                Nome: nome,
+                Sobrenome: sobrenome,
+                Email: email,
+                Senha: senha,
+                DataNascimento: dataNascimento,
                 imagemUri
             };
     
@@ -139,15 +111,12 @@ const Perfil = () => {
             Alert.alert('Erro', 'Ocorreu um erro ao atualizar o perfil.');
         }
     };
-    
-    
-
 
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
                 <View style={styles.logoTopLeftContainer}>
-                    <Image style={styles.logoTopLeft} source={CapaLogin} />
+                    <Image style={styles.logoTopLeft} source={capaLogin} />
                 </View>
 
                 <View style={styles.formContainer}>
@@ -155,38 +124,37 @@ const Perfil = () => {
                         {imagemUri ? (
                             <Image source={{ uri: imagemUri }} style={styles.profileImage} />
                         ) : (
-                            <Image source={IconPerfil} style={styles.profileImagePlaceholder} />
+                            <Image source={iconePerfil} style={styles.profileImagePlaceholder} />
                         )}
                     </TouchableOpacity>
-
 
                     {imagemUri ? <Image source={{ uri: imagemUri }} style={styles.previewImagem} /> : null}
 
                     <Text style={styles.title}>Perfil</Text>
                     
                     <TouchableOpacity style={styles.googleButton}>
-                        <Image source={GoogleLogo} style={styles.googleLogo} />
+                        <Image source={logoGoogle} style={styles.googleLogo} />
                         <Text style={styles.googleButtonText}>Logado com o Google</Text>
                     </TouchableOpacity>
 
                     <TextInput
                         style={styles.input}
                         onChangeText={setNome}
-                        value={Nome}
+                        value={nome}
                         placeholder="Nome"
                         placeholderTextColor="#333"
                     />
                     <TextInput
                         style={styles.input}
                         onChangeText={setSobrenome}
-                        value={Sobrenome}
+                        value={sobrenome}
                         placeholder="Sobrenome"
                         placeholderTextColor="#333"
                     />
                     <TextInput
                         style={styles.input}
                         onChangeText={setEmail}
-                        value={Email}
+                        value={email}
                         placeholder="Endereço de Email"
                         placeholderTextColor="#333"
                         keyboardType="email-address"
@@ -194,19 +162,19 @@ const Perfil = () => {
                     <TextInput
                         style={styles.input}
                         onChangeText={handleDateChange}
-                        value={DataNascimento}
+                        value={dataNascimento}
                         placeholder="Data de Nascimento (DD/MM/AAAA)"
                         placeholderTextColor="#333"
                     />
                     <TextInput
                         style={styles.input}
                         onChangeText={setSenha}
-                        value={Senha}
+                        value={senha}
                         placeholder="Senha"
                         placeholderTextColor="#333"
                         secureTextEntry
                     />
-                    <Pressable onPress={Salvar_edicao_deInformacao} style={styles.loginButton}>
+                    <Pressable onPress={salvarEdicaoDeInformacao} style={styles.loginButton}>
                         <Text style={styles.loginButtonText}>Salvar</Text>
                     </Pressable>
                 </View>
@@ -214,7 +182,6 @@ const Perfil = () => {
         </SafeAreaView>
     );
 };
-
 
 const styles = StyleSheet.create({
     container: {
@@ -263,11 +230,11 @@ const styles = StyleSheet.create({
         height: '100%',
         resizeMode: 'cover',
     },
-        profileImagePlaceholder: {
-            width: '100%',
-            height: '100%',
-            resizeMode: 'cover', 
-        },
+    profileImagePlaceholder: {
+        width: '100%',
+        height: '100%',
+        resizeMode: 'cover', 
+    },
     googleButton: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -302,21 +269,21 @@ const styles = StyleSheet.create({
         color: '#333',
     },
     loginButton: {
-        backgroundColor: '#333',
+        backgroundColor: '#4CAF50',
         paddingVertical: 15,
-        paddingHorizontal: 40,
+        width: '100%',
         borderRadius: 5,
         alignItems: 'center',
-        width: '100%',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 6 },
-        shadowOpacity: 50,
-        shadowRadius: 15,
-        elevation: 21,
     },
     loginButtonText: {
         color: 'white',
-        fontSize: 16,
+        fontSize: 18,
+    },
+    previewImagem: {
+        marginTop: 15,
+        width: 200,
+        height: 200,
+        borderRadius: 10,
     },
 });
 

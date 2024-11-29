@@ -5,40 +5,40 @@ import jsonwebtoken from "jsonwebtoken";
 
 
 
-// const editarPerfil = async (req, res) => {
-//     const token = req.headers.authorization?.split(" ")[1];
-//     if (!token) {
-//         return res.status(401).json({ message: 'Token não fornecido' });
-//     }
+const editarPerfil = async (req, res) => {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+        return res.status(401).json({ message: 'Token não fornecido' });
+    }
 
-//     try {
-//         const decoded = jsonwebtoken.verify(token, 'chavecriptografiajwt');
-//         const user = await User.findOne({ where: { Email: decoded.Email } });
-//         if (!user) {
-//             return res.status(404).json({ message: 'Usuário não encontrado' });
-//         }
+    try {
+        const decoded = jsonwebtoken.verify(token, 'chavecriptografiajwt');
+        const user = await User.findOne({ where: { Email: decoded.Email } });
+        if (!user) {
+            return res.status(404).json({ message: 'Usuário não encontrado' });
+        }
 
-//         const { Nome, Sobrenome, Email, Senha, DataNascimento, imagemUri } = req.body;
+        const { Nome, Sobrenome, Email, Senha, DataNascimento, imagemUri } = req.body;
 
-//         let senhaCriptografada = user.Senha;
-//         if (Senha) {
-//             senhaCriptografada = bcryptjs.hashSync(Senha, 10);
-//         }
+        let senhaCriptografada = user.Senha;
+        if (Senha) {
+            senhaCriptografada = bcryptjs.hashSync(Senha, 10);
+        }
 
-//         await user.update({
-//             Nome: Nome || user.Nome,
-//             Sobrenome: Sobrenome || user.Sobrenome,
-//             Email: Email || user.Email,
-//             Senha: senhaCriptografada,
-//             DataNascimento: DataNascimento || user.DataNascimento,
-//             imagemUri: imagemUri || user.imagemUri
-//         });
+        await user.update({
+            Nome: Nome || user.Nome,
+            Sobrenome: Sobrenome || user.Sobrenome,
+            Email: Email || user.Email,
+            Senha: senhaCriptografada,
+            DataNascimento: DataNascimento || user.DataNascimento,
+            imagemUri: imagemUri || user.imagemUri
+        });
 
-//         res.status(200).json({ message: 'Perfil atualizado com sucesso!' });
-//     } catch (error) {
-//         return res.status(401).json({ message: 'Token inválido ou expirado' });
-//     }
-// };
+        res.status(200).json({ message: 'Perfil atualizado com sucesso!' });
+    } catch (error) {
+        return res.status(401).json({ message: 'Token inválido ou expirado' });
+    }
+};
 
 
 
