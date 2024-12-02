@@ -6,9 +6,9 @@ import { useRouter } from 'expo-router';
 const Login = () => {
     const [Email, setEmail] = useState('');
     const [Senha, setSenha] = useState('');
-    const [mensagemErro, setMensagemErro] = useState(''); 
-    const CapaSignUp = require('./pasta_de_imagens/logo.png'); 
-    const GoogleLogo = require('./pasta_de_imagens/logo.png'); 
+    const [mensagemErro, setMensagemErro] = useState('');
+    const CapaSignUp = require('./pasta_de_imagens/logo.png');
+    const GoogleLogo = require('./pasta_de_imagens/logo.png');
 
     const { width } = useWindowDimensions();
     const router = useRouter();
@@ -33,25 +33,19 @@ const Login = () => {
             });
 
             const dados = await resposta.json();
-            console.log(dados)
-            const tokenJWT = JSON.stringify(dados.tokenJWT)
-            const id = JSON.stringify(dados.id)
-
-            await AsyncStorage.setItem('tokenJWT', tokenJWT)
-            await AsyncStorage.setItem('id', id)
-
             if (resposta.ok) {
-                console.log(dados.message); 
-                setEmail('');  
-                setSenha(''); 
-                setMensagemErro(''); 
-                router.push("Perfil"); 
+                await AsyncStorage.setItem('tokenJWT', dados.tokenJWT);
+                await AsyncStorage.setItem('id', dados.id.toString());
 
+                setEmail('');
+                setSenha('');
+                setMensagemErro('');
+                router.push("Perfil");
             } else {
-                setMensagemErro(dados.message || 'Erro ao tentar logar.'); 
+                setMensagemErro(dados.message || 'Erro ao tentar logar.');
             }
         } catch (error) {
-            setMensagemErro('Erro na solicitação: ' + error.message); 
+            setMensagemErro('Erro na solicitação: ' + error.message);
         }
     };
 
@@ -103,7 +97,7 @@ const Login = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFE5E5', 
+        backgroundColor: '#FFE5E5',
         alignItems: 'center',
         padding: 20,
     },
@@ -135,7 +129,7 @@ const styles = StyleSheet.create({
         borderColor: '#DDDDDD',
         borderWidth: 1,
         paddingVertical: 12,
-        paddingHorizontal: 10, 
+        paddingHorizontal: 10,
         borderRadius: 5,
         marginBottom: 15,
         width: '100%',
@@ -143,7 +137,7 @@ const styles = StyleSheet.create({
     googleLogo: {
         width: 40,
         height: 30,
-        marginLeft: 0, 
+        marginLeft: 0,
         marginRight: 8,
     },
     googleButtonText: {
@@ -170,9 +164,9 @@ const styles = StyleSheet.create({
         width: '100%',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 6 },
-        shadowOpacity: 50,       
-        shadowRadius: 15,        
-        elevation: 21,           
+        shadowOpacity: 50,
+        shadowRadius: 15,
+        elevation: 21,
     },
     registerButtonText: {
         color: 'white',
@@ -185,7 +179,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
         paddingHorizontal: 10,
     },
-    errorMessage: { 
+    errorMessage: {
         color: 'red',
         marginBottom: 10,
     },

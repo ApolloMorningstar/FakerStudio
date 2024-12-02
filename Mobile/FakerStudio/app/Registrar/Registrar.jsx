@@ -9,8 +9,8 @@ const Registrar = () => {
     const [DataNascimento, setDataNascimento] = useState('');
     const [Senha, setSenha] = useState('');
 
-    const CapaLogin = require('./pasta_de_imagens/logo.png'); 
-    const GoogleLogo = require('./pasta_de_imagens/logo_deuses.png'); 
+    const CapaLogin = require('./pasta_de_imagens/logo.png');
+    const GoogleLogo = require('./pasta_de_imagens/logo_deuses.png');
 
     const { width } = useWindowDimensions();
 
@@ -27,29 +27,29 @@ const Registrar = () => {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ Nome: Nome, Sobrenome: Sobrenome, Email: Email, DataNascimento: DataNascimento, Senha: Senha }) 
+                body: JSON.stringify({ Nome, Sobrenome, Email, DataNascimento, Senha })
             });
 
             if (resposta.ok) {
-                console.log('Usuário logado com sucesso');
+                Alert.alert('Sucesso', 'Usuário registrado com sucesso');
                 setNome('');
                 setSobrenome('');
                 setEmail('');
                 setDataNascimento('');
                 setSenha('');
             } else {
-                console.log('Ocorreu um erro:', resposta.status);
+                Alert.alert('Erro', 'Ocorreu um erro ao registrar.');
             }
         } catch (error) {
-            console.log('Erro na solicitação:', error);
+            Alert.alert('Erro', 'Erro na solicitação: ' + error.message);
         }
     };
 
     const handleDateChange = (text) => {
         const maskedText = text
-            .replace(/\D/g, '') // Remove caracteres não numéricos
-            .replace(/(\d{2})(\d)/, '$1/$2') // Adiciona barra após os dois primeiros dígitos
-            .replace(/(\d{2})\/(\d{2})(\d)/, '$1/$2/$3'); // Adiciona barra após os dois próximos dígitos
+            .replace(/\D/g, '')
+            .replace(/(\d{2})(\d)/, '$1/$2') 
+            .replace(/(\d{2})\/(\d{2})(\d)/, '$1/$2/$3'); 
         setDataNascimento(maskedText);
     };
 
@@ -63,58 +63,47 @@ const Registrar = () => {
                     <Text style={styles.title}>Registrar</Text>
                     <TouchableOpacity style={styles.googleButton}>
                         <Image source={GoogleLogo} style={styles.googleLogo} />
-                        <Text style={styles.googleButtonText}>Entrar com o Google</Text>
+                        <Text style={styles.googleButtonText}>Cadastre-se com o Google</Text>
                     </TouchableOpacity>
+
                     <TextInput
                         style={styles.input}
-                        onChangeText={setNome}
                         value={Nome}
+                        onChangeText={setNome}
                         placeholder="Nome"
-                        placeholderTextColor="#333"
                     />
                     <TextInput
                         style={styles.input}
-                        onChangeText={setSobrenome}
                         value={Sobrenome}
+                        onChangeText={setSobrenome}
                         placeholder="Sobrenome"
-                        placeholderTextColor="#333"
                     />
                     <TextInput
                         style={styles.input}
-                        onChangeText={setEmail}
                         value={Email}
-                        placeholder="Endereço de Email"
-                        placeholderTextColor="#333"
+                        onChangeText={setEmail}
+                        placeholder="Email"
                         keyboardType="email-address"
                     />
                     <TextInput
                         style={styles.input}
-                        onChangeText={handleDateChange} 
                         value={DataNascimento}
-                        placeholder="Data de Nascimento (DD/MM/AAAA)"
-                        placeholderTextColor="#333"
+                        onChangeText={handleDateChange}
+                        placeholder="Data de Nascimento"
+                        keyboardType="numeric"
                     />
                     <TextInput
                         style={styles.input}
-                        onChangeText={setSenha}
                         value={Senha}
+                        onChangeText={setSenha}
                         placeholder="Senha"
-                        placeholderTextColor="#333"
                         secureTextEntry
                     />
-                <Link href="Perfil/Perfil" asChild>
-                    <Pressable onPress={realizarRegistro} style={styles.loginButton}>
-                        <Text style={styles.loginButtonText}>Registrar</Text>
+                    <Pressable onPress={realizarRegistro} style={styles.registerButton}>
+                        <Text style={styles.registerButtonText}>Registrar</Text>
                     </Pressable>
-                    </Link>
-                    <View style={styles.forgotPasswordContainer}>
-                        <TouchableOpacity onPress={() => console.log('Redirecionar para recuperação de senha')}>
-                            <Text style={styles.forgotPasswordText}>Esqueci minha senha</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <Text style={styles.footerText}>
-                        Ao continuar, você concorda com nossos Termos de Serviço. Leia nossa política de privacidade.
-                    </Text>
+
+                    <Text style={styles.footerText}>Já tem uma conta? <Link href="/login">Entre</Link></Text>
                 </View>
             </ScrollView>
         </SafeAreaView>
@@ -124,12 +113,9 @@ const Registrar = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFE5E5', 
+        backgroundColor: '#FFE5E5',
+        alignItems: 'center',
         padding: 20,
-    },
-    scrollViewContent: {
-        alignItems: 'center', 
-        paddingBottom: 20, 
     },
     logoContainer: {
         marginTop: 50,
@@ -159,7 +145,7 @@ const styles = StyleSheet.create({
         borderColor: '#DDDDDD',
         borderWidth: 1,
         paddingVertical: 12,
-        paddingHorizontal: 15,
+        paddingHorizontal: 10,
         borderRadius: 5,
         marginBottom: 15,
         width: '100%',
@@ -185,7 +171,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         color: '#333',
     },
-    loginButton: {
+    registerButton: {
         backgroundColor: '#333',
         paddingVertical: 15,
         paddingHorizontal: 40,
@@ -198,19 +184,9 @@ const styles = StyleSheet.create({
         shadowRadius: 15,
         elevation: 21,
     },
-    loginButtonText: {
+    registerButtonText: {
         color: 'white',
         fontSize: 16,
-    },
-    forgotPasswordContainer: {
-        alignSelf: 'stretch', 
-        alignItems: 'flex-end', 
-        marginTop: 15, 
-    },
-    forgotPasswordText: {
-        color: '#FF6F61', 
-        fontSize: 14,
-        textDecorationLine: 'underline',
     },
     footerText: {
         textAlign: 'center',
@@ -218,6 +194,13 @@ const styles = StyleSheet.create({
         color: '#888',
         marginTop: 20,
         paddingHorizontal: 10,
+    },
+    scrollViewContent: {
+        flexGrow: 1,
+        justifyContent: 'center',
+    },
+    errorMessage: {
+        color: 'red',
     },
 });
 

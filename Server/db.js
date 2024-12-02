@@ -45,7 +45,7 @@ const User = sequelize.define('user', { //criação de tabela
             allowNull: false,
         },
         bio: {
-            type: Sequelize.DataTypes.TEXT,
+            type: Sequelize.DataTypes.STRING,
             allowNull: true,
         },
         imageUrl: {
@@ -121,7 +121,7 @@ const User = sequelize.define('user', { //criação de tabela
             .catch((err) => {
                 console.log(err)
             })
-        sequelize.sync({ force: true }).then(() => {
+        sequelize.sync({ alter: true }).then(() => {
             console.log('tabela criada')
         })
     }

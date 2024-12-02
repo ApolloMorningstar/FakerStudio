@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ScrollView, View, Text, TextInput, Pressable, StyleSheet, SafeAreaView, Image, TouchableOpacity, Alert, Button } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, Image, ActivityIndicator, TouchableOpacity, Pressable, Modal, TextInput, Alert, ScrollView, SafeAreaView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Link } from 'expo-router';
 
 const Perfil = () => {
     const [nome, setNome] = useState('');
@@ -11,8 +12,6 @@ const Perfil = () => {
     const [senha, setSenha] = useState('');
     const [imagemUri, setImagemUri] = useState('');
     const capaLogin = require('./pasta_de_imagens/logo.png'); 
-    const logoGoogle = require('./pasta_de_imagens/logo.png'); 
-    const iconePerfil = require('./pasta_de_imagens/iconPerfil.png');
 
     useEffect(() => {
         const fetchPerfil = async () => {
@@ -75,21 +74,25 @@ const Perfil = () => {
                 Alert.alert('Erro', 'Token não encontrado.');
                 return;
             }
-    
+
             if (!userId) {
                 Alert.alert('Erro', 'ID do usuário não encontrado.');
                 return;
             }
-    
+
+            // Dados a serem enviados para atualização
             const dadosAtualizados = {
                 Nome: nome,
                 Sobrenome: sobrenome,
                 Email: email,
-                Senha: senha,
                 DataNascimento: dataNascimento,
-                imagemUri
+                imagemUri,
             };
-    
+
+            if (senha) {
+                dadosAtualizados.Senha = senha;  // Inclui a senha se foi alterada
+            }
+
             const response = await fetch(`http://localhost:8000/autentificacao/ChangePerfil`, {
                 method: 'PUT',
                 headers: {
@@ -98,9 +101,13 @@ const Perfil = () => {
                 },
                 body: JSON.stringify(dadosAtualizados),
             });
-    
+
             if (response.ok) {
                 Alert.alert('Sucesso', 'Perfil atualizado com sucesso!');
+                // Alerta de senha alterada com sucesso
+                if (senha) {
+                    Alert.alert('Sucesso', 'Senha mudada com sucesso!');
+                }
             } else {
                 const errorData = await response.json();
                 const errorMessage = errorData.message || 'Falha ao atualizar o perfil.';
@@ -124,7 +131,7 @@ const Perfil = () => {
                         {imagemUri ? (
                             <Image source={{ uri: imagemUri }} style={styles.profileImage} />
                         ) : (
-                            <Image source={iconePerfil} style={styles.profileImagePlaceholder} />
+                            <Image source={capaLogin} style={styles.profileImagePlaceholder} />
                         )}
                     </TouchableOpacity>
 
@@ -133,7 +140,7 @@ const Perfil = () => {
                     <Text style={styles.title}>Perfil</Text>
                     
                     <TouchableOpacity style={styles.googleButton}>
-                        <Image source={logoGoogle} style={styles.googleLogo} />
+                        <Image source={capaLogin} style={styles.googleLogo} />
                         <Text style={styles.googleButtonText}>Logado com o Google</Text>
                     </TouchableOpacity>
 
@@ -174,9 +181,16 @@ const Perfil = () => {
                         placeholderTextColor="#333"
                         secureTextEntry
                     />
+                    
                     <Pressable onPress={salvarEdicaoDeInformacao} style={styles.loginButton}>
                         <Text style={styles.loginButtonText}>Salvar</Text>
                     </Pressable>
+
+                    <Link href="/Home/Home" asChild>
+                        <Pressable style={styles.redirectButton}>
+                            <Text style={styles.redirectButtonText}>Ir para a Home</Text>
+                        </Pressable>
+                    </Link>
                 </View>
             </ScrollView>
         </SafeAreaView>
@@ -284,6 +298,18 @@ const styles = StyleSheet.create({
         width: 200,
         height: 200,
         borderRadius: 10,
+    },
+    redirectButton: {
+        backgroundColor: '#2196F3',
+        paddingVertical: 15,
+        width: '100%',
+        borderRadius: 5,
+        alignItems: 'center',
+        marginTop: 10,
+    },
+    redirectButtonText: {
+        color: 'white',
+        fontSize: 18,
     },
 });
 
