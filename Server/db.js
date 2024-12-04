@@ -11,7 +11,7 @@ const sequelize = new Sequelize(
         dialect: 'postgres'
     }
 )
-const User = sequelize.define('user', { //criação de tabela
+const User = sequelize.define('user', { 
     Nome: {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,
@@ -46,7 +46,7 @@ const User = sequelize.define('user', { //criação de tabela
         },
         bio: {
             type: Sequelize.DataTypes.STRING,
-            allowNull: true,
+            allowNull: false,
         },
         imageUrl: {
             type: Sequelize.DataTypes.STRING,
@@ -68,6 +68,10 @@ const User = sequelize.define('user', { //criação de tabela
             type: Sequelize.DataTypes.STRING,
             allowNull: true,
         },
+        descricaoAlbum: {
+            type: Sequelize.DataTypes.STRING,
+            allowNull: false,
+        },
     });
 
     Album.belongsTo(Artista, {
@@ -81,7 +85,7 @@ const User = sequelize.define('user', { //criação de tabela
     });
 
     const Musica = sequelize.define('Musica', {
-        coverImageUrl: {
+        coverImageUrlMusica: {
             type: Sequelize.DataTypes.STRING,
             allowNull: true,
         },

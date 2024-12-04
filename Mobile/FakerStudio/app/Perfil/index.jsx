@@ -80,7 +80,6 @@ const Perfil = () => {
                 return;
             }
 
-            // Dados a serem enviados para atualização
             const dadosAtualizados = {
                 Nome: nome,
                 Sobrenome: sobrenome,
@@ -90,7 +89,7 @@ const Perfil = () => {
             };
 
             if (senha) {
-                dadosAtualizados.Senha = senha;  // Inclui a senha se foi alterada
+                dadosAtualizados.Senha = senha;  
             }
 
             const response = await fetch(`http://localhost:8000/autentificacao/ChangePerfil`, {
@@ -104,7 +103,6 @@ const Perfil = () => {
 
             if (response.ok) {
                 Alert.alert('Sucesso', 'Perfil atualizado com sucesso!');
-                // Alerta de senha alterada com sucesso
                 if (senha) {
                     Alert.alert('Sucesso', 'Senha mudada com sucesso!');
                 }

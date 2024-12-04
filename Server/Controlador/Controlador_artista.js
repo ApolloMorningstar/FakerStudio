@@ -2,7 +2,7 @@ import {Artista, Album, Musica} from '../db.js'
 
 const pegarTodosArtistas = async (req, res) => {
   try {
-    const artists = await Artista.findAll({attributes: ['id', 'nome', 'imageUrl']});
+    const artists = await Artista.findAll({attributes: ['id', 'nome','bio', 'imageUrl']});
     return res.status(200).json(artists);
   } catch (error) {
     return res.status(500).json({ error: 'Erro ao buscar artistas' });
@@ -15,7 +15,7 @@ const pegarArtistaPorId = async (req, res) => {
       include: [{
         model: Album,
         as: 'Albums',
-        attributes: ['id', 'title', 'coverImageUrl']
+        attributes: ['id', 'title', 'bio', 'coverImageUrl']
       }]
     });
     if (!artist) {

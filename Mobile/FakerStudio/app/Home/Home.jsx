@@ -1,6 +1,3 @@
-
-
-
 import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity, Modal, Button, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -74,16 +71,17 @@ const Home = () => {
   const renderizarMusica = ({ item }) => (
     <View style={styles.songContainer}>
       <TouchableOpacity style={styles.songButton}>
+      <Image source={{ uri: item.coverImageUrlMusica }} style={styles.musicaCapa} />
         <Text style={styles.songTitle}>{item.titulo}</Text>
         <Text style={styles.songDuration}>{item.duracao}</Text>
+        <Image source={{ uri: item.fileUrl }} style={styles.musicaMp3}/>
       </TouchableOpacity>
     </View>
   );
 
-  // Função para navegação nos FlatLists
   const scrollFlatList = (ref, direction) => {
     if (ref.current) {
-      const offset = direction === 'left' ? -200 : 200; // Ajuste do deslocamento
+      const offset = direction === 'left' ? -200 : 200; 
       ref.current.scrollToOffset({ animated: true, offset });
     }
   };
@@ -175,6 +173,7 @@ const Home = () => {
                   />
                   <Text style={styles.modalTitle}>{albumSelecionado.title}</Text>
                   <Text style={styles.modalDescription}>{albumSelecionado.releaseYear}</Text>
+                  <Text style={styles.modalDescription}>{albumSelecionado.descricaoAlbum}</Text>
                   <Button title="Fechar" onPress={() => setModalAlbumVisivel(false)} />
                 </>
               )}
@@ -229,7 +228,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContainer: {
-    paddingBottom: 20, // Para garantir que o conteúdo tenha um espaço no final
+    paddingBottom: 20, 
   },
   header: {
     flexDirection: 'row',
